@@ -3,14 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Live Board</title>
+    <title>Peroco Chat</title>
+    <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
+    <button onclick="document.getElementById('about-modal').classList.remove('hidden')" style="position: absolute; top: 12px; right: 12px; background: var(--color-surface); border: 1px solid var(--border); border-radius: 8px; font-size: 20px; cursor: pointer; z-index: 50; padding: 6px 10px; color: var(--text-main); box-shadow: 0 4px 10px rgba(0,0,0,0.3);" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter='none'" title="Info & Settings">ℹ️</button>
+
+    <div id="about-modal" class="modal-overlay hidden" style="z-index: 1000;">
+        <div class="panel modal-content" style="max-width: 400px; padding: 25px; text-align: left;">
+            <button onclick="document.getElementById('about-modal').classList.add('hidden')" class="modal-close-btn" style="top: 15px; right: 15px;">✖</button>
+            <h2 style="margin-top:10px; color:var(--accent-home); text-align: center;">💬 Peroco Chat</h2>
+            <p style="color:var(--text-main); font-size:16px; line-height:1.5; margin-bottom:20px; text-align: center;">
+                Shared typing. Messages vanish in 1 hour.
+            </p>
+            <div style="background:var(--color-surface-dark); padding:15px; border-radius:8px; margin-bottom:20px; font-size:14px; color:var(--text-muted);">
+                <p style="margin:0 0 10px 0;">
+                    <strong>💻 Open Source:</strong><br/> 
+                    Find the code and contribute on <a href="https://github.com/peteycornick/chat" target="_blank" rel="noreferrer" style="color:var(--accent-away)">GitHub</a>.
+                </p>
+                <p style="margin:0;">
+                    <strong>🌐 Hosted By:</strong><br/> 
+                    Peroco Networks at <a href="https://chat.peroco.net" target="_blank" rel="noreferrer" style="color:var(--accent-away)">chat.peroco.net</a>
+                </p>
+            </div>
+            
+            <div style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin: 0 0 8px 12px; font-weight: 600;">Appearance</div>
+            <div style="background: var(--color-surface); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 20px;">
+                <label style="display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; font-size: 15px;">
+                    <span>Theme Preference</span>
+                    <select id="settings-theme-select" style="padding: 6px 10px; font-size: 14px; width: 120px; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border); border-radius: 6px;">
+                        <option value="system">System</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </label>
+            </div>
+
+            <button class="btn-blue" style="width:100%; padding:12px; font-size: 16px; font-weight: bold; background: var(--accent-home); color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="document.getElementById('about-modal').classList.add('hidden')">Close</button>
+        </div>
+    </div>
+
     <div class="chat-container">
         <div class="chat-header">
-            <h2>Live Board</h2>
-            <p>Shared typing. Messages vanish in 1 hour.</p>
+            <h2>Peroco Chat</h2>
         </div>
         
         <div class="messages" id="message-board"></div>
@@ -23,5 +62,26 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
+    <script>
+        const settingsThemeSelect = document.getElementById('settings-theme-select');
+        let themePref = localStorage.getItem("theme_pref") || "system";
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function applyTheme() {
+            let activeTheme = themePref;
+            if (themePref === 'system') {
+                activeTheme = mediaQuery.matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', activeTheme);
+            localStorage.setItem("theme_pref", themePref);
+            if (settingsThemeSelect) settingsThemeSelect.value = themePref;
+        }
+
+        if (settingsThemeSelect) {
+            settingsThemeSelect.addEventListener('change', (e) => { themePref = e.target.value; applyTheme(); });
+        }
+        mediaQuery.addEventListener('change', applyTheme);
+        applyTheme(); // Initial load
+    </script>
 </body>
 </html>
