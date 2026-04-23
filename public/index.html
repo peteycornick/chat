@@ -6,6 +6,8 @@
     <title>Peroco Chat</title>
     <link rel="stylesheet" href="theme.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <style>
         .hidden { display: none !important; }
     </style>
@@ -65,6 +67,12 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').then(reg => {
+                console.log('Service Worker Registered!');
+            });
+        }
+
         const settingsThemeSelect = document.getElementById('settings-theme-select');
         let themePref = localStorage.getItem("theme_pref") || "system";
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
