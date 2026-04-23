@@ -35,10 +35,22 @@ socket.on('inputUpdate', (text) => {
 socket.on('messageUpdate', (messages) => {
     messageBoard.innerHTML = ''; 
     
+    const now = Date.now();
+
     messages.forEach((msg) => {
         const messageEl = document.createElement('div');
         messageEl.classList.add('message');
-        messageEl.innerText = msg.text;
+        
+        const textSpan = document.createElement('div');
+        textSpan.innerText = msg.text;
+        
+        const timeSpan = document.createElement('div');
+        timeSpan.classList.add('timestamp');
+        const diffMins = Math.floor(Math.max(0, now - msg.timestamp) / 60000);
+        timeSpan.innerText = diffMins === 0 ? 'Just now' : `${diffMins}m ago`;
+        
+        messageEl.appendChild(textSpan);
+        messageEl.appendChild(timeSpan);
         messageBoard.appendChild(messageEl);
     });
 
