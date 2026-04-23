@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Live Board</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Live Board</h2>
+            <p>Shared typing. Messages vanish in 1 hour.</p>
+        </div>
+        
+        <div class="messages" id="message-board"></div>
+
+        <div class="input-area">
+            <input type="text" id="shared-input" placeholder="Type here..." autocomplete="off" maxlength="160">
+            <button id="submit-btn">Send</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
